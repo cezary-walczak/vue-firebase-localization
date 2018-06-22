@@ -20,5 +20,7 @@ export default {
   section#navbar
     nav
       a
-        margin 10px
+        margin 20px
+        padding 20px
+        background #fff
 </style>
