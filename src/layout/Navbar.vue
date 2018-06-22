@@ -2,7 +2,7 @@
   section#navbar
     nav
       router-link(:to="{ name: 'Signup' }") Signup
-      router-link(:to="{ name: '' }") Login
+      router-link(:to="{ name: 'Login' }") Login
       a(@click="logout") Logout
 </template>
 
@@ -20,7 +20,7 @@ export default {
     logout() {
       firebase.auth().signOut()
       .then(() => {
-        this.$router.push({ name: 'Signup' })
+        this.$router.push({ name: 'Login' })
       })
       .catch(error => { console.log(error) })
     }
