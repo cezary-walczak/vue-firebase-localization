@@ -1,7 +1,7 @@
 <template lang="pug">
   section#navbar
     nav
-      router-link(:to="{ name: '' }") Signup
+      router-link(:to="{ name: 'Signup' }") Signup
       router-link(:to="{ name: '' }") Login
 </template>
 
