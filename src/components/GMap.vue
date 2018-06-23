@@ -9,13 +9,14 @@ export default {
   name: 'GMap',
   data() {
     return {
-
+      lat: 52,
+      lng: 21
     }
   },
   methods: {
     renderMap() {
       const map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: 52, lng: 21 },
+        center: { lat: this.lat, lng: this.lng },
         zoom: 6,
         maxZoom: 15,
         minZoom: 3,
@@ -24,8 +25,26 @@ export default {
     }
   },
   mounted() {
-    this.renderMap()
-    console.log(firebase.auth().currentUser)
+    // get user geolocation
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition( // takes callback for success and failure and object for options
+      pos => {
+        this.lat = pos.coords.latitude
+        this.lng = pos.coords.longitude
+        this.renderMap()
+      },
+      error => {
+        console.log(error)
+        this.renderMap()
+      },
+      {
+        maximumAge: 60000,
+        timeout: 3000
+      })
+    } else {
+      // position center by default value
+      this.renderMap()
+    }
   }
 }
 </script>
