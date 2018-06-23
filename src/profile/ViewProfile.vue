@@ -4,7 +4,9 @@
       h2 {{ profile.alias }} wall
       .comments
         ul
-          li Comment
+          li(v-for="comment in comments")
+            p {{ comment.from }}
+            p {{ comment.content }}
         form(@submit.prevent="addComment")
           label(for="comment") Add a comment
           input(type="text" name="comment" v-model="newComment")
@@ -22,6 +24,7 @@ export default {
       user: null,
       profile: null,
       newComment: null,
+      comments: [],
       feedback: null
     }
   },
@@ -35,12 +38,23 @@ export default {
       })
     })
     .catch(error => { console.log(error) })
-
+    // profile data
     db.collection('users').doc(this.$route.params.id).get()
     .then(user => {
       this.profile = user.data()
     })
     .catch(error => { console.log(errors) })
+    // comments
+    db.collection('comments').where('to', '==', this.$route.params.id).onSnapshot(snapshot => {
+      snapshot.docChanges().forEach(change => {
+        if (change.type == 'added') {
+          this.comments.push({
+            from: change.doc.data().from,
+            content: change.doc.data().content
+          })
+        }
+      })
+    })
   },
   methods: {
     addComment() {
