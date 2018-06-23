@@ -1,9 +1,10 @@
 <template lang="pug">
   section#navbar
     nav
-      router-link(:to="{ name: 'Signup' }") Signup
-      router-link(:to="{ name: 'Login' }") Login
-      a(@click="logout") Logout
+      router-link(v-if="!user" :to="{ name: 'Signup' }") Signup
+      router-link(v-if="!user" :to="{ name: 'Login' }") Login
+      a(v-if="user") {{user.email}}
+      a(v-if="user" @click="logout") Logout
 </template>
 
 <script>
@@ -13,7 +14,7 @@ export default {
   name: 'Navbar',
   data() {
     return {
-
+      user: null
     }
   },
   methods: {
@@ -24,6 +25,16 @@ export default {
       })
       .catch(error => { console.log(error) })
     }
+  },
+  created() {
+    // checking user state
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.user = user
+      } else {
+        this.user = null
+      }
+    })
   }
 }
 </script>
